@@ -19,4 +19,31 @@ function addCortinero(name) {
   return newCortinero;
 }
 
-module.exports = { getCortineros, addCortinero, getCortineroById };
+function updateCortinero(id, updateInfo) {
+  const cortinero = cortineros.find(c => c.id === parseInt(id));
+  if (!cortinero) return null;
+
+  Object.assign(cortinero, updateInfo);
+  return cortinero;
+}
+
+function deleteCortinero(id) {
+  const index = cortineros.findIndex(c => c.id === parseInt(id));
+  if (index === -1) return null; // No se encontró el cortinero
+
+  const [deletedCortinero] = cortineros.splice(index, 1);
+  return deletedCortinero;
+}
+
+function isNameUnique(name) {
+  return !cortineros.some(c => c.name === name);
+}
+
+module.exports = { 
+  getCortineros, 
+  addCortinero, 
+  getCortineroById, 
+  updateCortinero, 
+  isNameUnique,
+  deleteCortinero
+ };

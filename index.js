@@ -4,7 +4,9 @@ const cortinerosRoutes = require('./src/routes/cortineros');
 require('dotenv').config();
 
 const app = express();
+
 app.use(express.json());
+
 app.use('/api/cortineros', cortinerosRoutes);
 
 const port = process.env.SERVER_PORT || 3001;
