@@ -1,4 +1,7 @@
 // index.js
+
+const logger = require('./src/middlewares/logger');
+const auth = require('./src/middlewares/auth');
 const express = require('express');
 const cortinerosRoutes = require('./src/routes/cortineros');
 require('dotenv').config();
@@ -6,6 +9,9 @@ require('dotenv').config();
 const app = express();
 
 app.use(express.json());
+
+app.use(logger);
+app.use(auth);
 
 app.use('/api/cortineros', cortinerosRoutes);
 
