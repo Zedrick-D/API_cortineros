@@ -1,19 +1,37 @@
-// index.js
-
+require('dotenv').config();
+const debug = require('debug')('app:startup');
+const config = require('config');
+const morgan = require('morgan');
+const helmet = require('helmet');
 const logger = require('./src/middlewares/logger');
 const auth = require('./src/middlewares/auth');
+const home = require('./src/routes/home')
 const express = require('express');
 const cortinerosRoutes = require('./src/routes/cortineros');
-require('dotenv').config();
-
 const app = express();
 
+app.set('view engine', 'pug');
+app.set('views', './views'); 
+
+///conf
+console.log('Aplication Name:  ' + config.get('name'));
+console.log('Mail Server:  ' + config.get('mail.host'));
+// console.log('Mail Password:  ' + config.get('mail.password'));
+
+
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static('public'));
+app.use(helmet());
+app.use('/api/cortineros', cortinerosRoutes);
+app.use('/', home);
+if (app.get('env') === 'development') {
+  app.use(morgan('tiny'));
+  debug('Morgan enable...');
+}
 
 app.use(logger);
 app.use(auth);
-
-app.use('/api/cortineros', cortinerosRoutes);
 
 const port = process.env.SERVER_PORT || 3001;
 app.listen(port, () => console.log(`>>>Escuchando en el puerto ${port}`));
